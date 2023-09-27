@@ -11,12 +11,13 @@ import java.io.IOException;
 
 public class Game
 {
+    private int flag = 0;
+    private int c = 0;
     private static Screen screen;
-    private int x = 10;
-    private int y = 10;
+    private Hero hero = new Hero();
     private void draw() throws IOException{
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
     private void processKey(KeyStroke key) throws IOException {
@@ -25,28 +26,38 @@ public class Game
         switch(key.getKeyType())
         {
             case ArrowLeft:
-                x--;
+                hero.moveleft();
                 draw();
                 break;
             case ArrowDown:
-                y++;
+                hero.movedown();
                 draw();
                 break;
             case ArrowRight:
-                x++;
+                hero.moveright();
                 draw();
                 break;
             case ArrowUp:
-                y--;
+                hero.moveup();
                 draw();
                 break;
+            case Character:
+                if(key.getCharacter() == 'q'){
+                    flag =1;
+                    screen.close();
+                }
+
         }
+        c++;
         System.out.println(key);
     }
     public void run() throws IOException {
         draw();
-        KeyStroke key = screen.readInput();
-        processKey(key);
+        while(flag==0) {
+            KeyStroke key = screen.readInput();
+            processKey(key);
+        }
+        screen.close();
     }
 
 
