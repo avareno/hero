@@ -1,5 +1,5 @@
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.screen.Screen;
 
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ public class Arena {
         System.out.println(key);
     }
 
-    public static void draw(Screen screen) {
-        hero.draw(screen);
+    public static void draw(TextGraphics graphics) {
+        hero.draw(graphics);
     }
 }
