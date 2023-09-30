@@ -1,6 +1,4 @@
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -13,21 +11,30 @@ import java.io.IOException;
 
 public class Game
 {
-    static Screen screen;
+    private Screen screen;
+    private Arena arena;
+
+    public Screen getScreen() {
+        return screen;
+    }
+
+    public void setScreen(Screen screen) {
+        this.screen = screen;
+    }
 
     private void draw() throws IOException{
         screen.clear();
-        Arena.draw(screen.newTextGraphics());
+        this.arena.draw(screen.newTextGraphics());
         screen.refresh();
     }
     private void processKey(KeyStroke key) throws IOException {
 
-        Arena.processKey(key);
+        this.arena.processKey(key);
     }
     public void run() throws IOException {
 
         KeyStroke key = screen.readInput();
-        while(key.getKeyType()!=KeyType.EOF) {
+        while((key.getKeyType()!=KeyType.EOF)) {
             draw();
             key = screen.readInput();
             processKey(key);
@@ -41,8 +48,8 @@ public class Game
     Game()
     {
         try {
-            Arena arena = new Arena();
-            TerminalSize terminalSize = new TerminalSize(Arena.getWidth(), Arena.getHeight());
+            this.arena = new Arena();
+            TerminalSize terminalSize = new TerminalSize(arena.getWidth(), arena.getHeight());
             DefaultTerminalFactory terminalFactory = new
                     DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);

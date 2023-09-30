@@ -4,8 +4,10 @@ import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
+import java.util.List;
+
 public class Hero {
-    private Position position = new Position();
+    private Position position;
     Hero()
     {
         this.position = new Position();
@@ -19,24 +21,33 @@ public class Hero {
     public void draw(TextGraphics graphics) {
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
                 graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(Position.getX(),
-                Position.getY()), "X");
+        graphics.putString(new TerminalPosition(position.getX(),position.getY()), "X");
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public void moveleft()
     {
-        this.position.setX(Position.getX()-1);
+        this.position.setX(position.getX()-1);
     }
     public void moveright()
     {
-        this.position.setX(Position.getX()+1);
+        this.position.setX(position.getX()+1);
     }
     public void moveup()
     {
-        this.position.setY(Position.getY()-1);
+        this.position.setY(position.getY()-1);
     }
     public void movedown()
     {
-        this.position.setY(Position.getY()+1);
+        this.position.setY(position.getY()+1);
     }
+
+
 }

@@ -5,44 +5,99 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Arena {
-    private static int width;
-    private static int height;
-    private static Hero hero = new Hero();
-    public static void processKey(KeyStroke key) throws IOException {
+    private int width;
+    private int height;
+    private Hero hero;
+    private List<Walls> walls;
+    private List<Walls> createWalls() {
+        List<Walls> walls = new ArrayList<>();
+        for (int c = 0; c < width; c++) {
+            walls.add(new Walls(c, 0));
+            walls.add(new Walls(c, height - 1));
+        }
+        for (int r = 1; r < height - 1; r++) {
+            walls.add(new Walls(0, r));
+            walls.add(new Walls(width - 1, r));
+        }
+        return walls;
+    }
+    public boolean canHeroMove(Position position) {
+        int flag = 0;
+        for(Walls wall: walls)
+        {
+            if (wall.getPosition().equals(position))
+            {
+                flag = 1;
+                break;
+
+            }
+
+            /*
+            if(wall.getPosition().getX() == position.getX() && wall.getPosition().getY() == position.getY())
+            {
+                flag = 1;
+                break;
+            }
+             */
+
+        }
+        /*
+        if((position.getX()>0) && (position.getY()>0) && (position.getX()<width-1) && (position.getY()<height-1))return true;
+        return false;
+
+         */
+        return flag != 1;
+    }
+    public void moveHero(Position position) {
+        if (canHeroMove(position))
+            hero.setPosition(position);
+    }
+
+
+
+    public void processKey(KeyStroke key) throws IOException {
+        Position position1;
         switch(key.getKeyType())
         {
             case ArrowLeft:
-                hero.moveleft();
+                position1 = new Position(this.hero.getPosition().getX()-1,this.hero.getPosition().getY());
+                moveHero(position1);
                 break;
             case ArrowDown:
-                hero.movedown();
+                position1 = new Position(this.hero.getPosition().getX(),this.hero.getPosition().getY()+1);
+                moveHero(position1);
                 break;
             case ArrowRight:
-                hero.moveright();
+                position1 = new Position(this.hero.getPosition().getX()+1,this.hero.getPosition().getY());
+                moveHero(position1);
                 break;
             case ArrowUp:
-                hero.moveup();
+                position1 = new Position(this.hero.getPosition().getX(),this.hero.getPosition().getY()-1);
+                moveHero(position1);
                 break;
-            case Character:
-                if(key.getCharacter()=='q')Game.screen.close();
-
+            /*case Character:
+                if(key.getCharacter()=='q')Game.getScreen().close();
+                break;
+            */
 
         }
         System.out.println(key);
     }
 
-    public static Hero getHero() {
-        return hero;
+    public Hero getHero() {
+        return this.hero;
     }
 
-    public static void setHero(Hero hero) {
-        Arena.hero = hero;
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
-    public static int getHeight() {
-        return height;
+    public int getHeight() {
+        return this.height;
     }
 
     public void setHeight(int height) {
@@ -53,19 +108,31 @@ public class Arena {
         this.width = width;
     }
 
-    public static int getWidth() {
+    public int getWidth() {
         return width;
+    }
+
+    public List<Walls> getWalls() {
+        return walls;
+    }
+
+    public void setWalls(List<Walls> walls) {
+        this.walls = walls;
     }
 
     public Arena() {
         width=100;
-        height=100;
+        height=20;
+        hero = new Hero();
+        this.walls = createWalls();
     }
 
-    public static void draw(TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
-                graphics.fillRectangle(new TerminalPosition(0, 0), new
-                        TerminalSize(getWidth(), getWidth()), ' ');
+    public void draw(TextGraphics graphics) {
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#330099"));
+                graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(getWidth(), getWidth()), ' ');
+        for (Walls wall : walls)
+            wall.draw(graphics);
+
         hero.draw(graphics);
     }
 }

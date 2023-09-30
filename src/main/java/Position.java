@@ -1,6 +1,6 @@
 public class Position {
-    private static int x;
-    private static int y;
+    private int x;
+    private int y;
 
     public Position() {
         this.x = 10;
@@ -11,19 +11,30 @@ public class Position {
         this.y = y;
     }
 
-    public static int getX() {
-        return x;
+    public int getX() {
+        return this.x;
     }
 
     public void setX(int x) {
         this.x = x;
     }
 
-    public static int getY() {
-        return y;
+    public int getY() {
+        return this.y;
     }
 
     public void setY(int y) {
         this.y = y;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (getClass() != o.getClass()) return false;
+        Position p = (Position) o;
+        return x == p.getX() && y == p.getY();
     }
 }
