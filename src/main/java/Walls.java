@@ -1,32 +1,26 @@
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 
-public class Walls {
-    private Position position;
-    public Walls()
+public class Walls extends Element {
+
+    public Walls(int x , int y)
     {
-        this.position = new Position();
-    }
-
-    public Walls(int c, int i) {
-        this.position = new Position(c,i);
+        setPosition(x,y);
 
     }
 
-    public Position getPosition() {
-        return position;
+    public void setPosition(int c, int i)
+    {
+        Position position = new Position(c,i);
+        setPosition(position);
     }
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
+    @Override
     public void draw(TextGraphics graphics) {
-        graphics.setForegroundColor(TextColor.Factory.fromString("#ff0000"));
-        graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(position.getX(),position.getY()),  	"█");
+        super.draw(graphics);
+        graphics.setForegroundColor(TextColor.Factory.fromString("#00ffa6"));
+        graphics.putString(new TerminalPosition(getPosition().getX(),getPosition().getY()),  	"█");
     }
 }
