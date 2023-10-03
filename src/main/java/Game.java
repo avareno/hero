@@ -38,7 +38,11 @@ public class Game
             key = screen.readInput();
             processKey(key);
         }
-        screen.close();
+        if(arena.getScore().getHealth()!=0)
+        {
+            Arena arena2 = new Arena();
+            arena2.endOfGame();
+        }
     }
 
 

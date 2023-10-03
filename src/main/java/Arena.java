@@ -11,12 +11,23 @@ import java.util.List;
 import java.util.Random;
 
 public class Arena {
+    private Score score;
     private int width;
+
+    public Score getScore() {
+        return score;
+    }
+
+    public void setScore(Score score) {
+        this.score = score;
+    }
+
     private int height;
     private Hero hero;
     private List<Walls> walls;
     private List<Coin> coins;
     private List<Monster> monsters;
+
     private List<Walls> createWalls() {
         List<Walls> walls = new ArrayList<>();
         for (int c = 0; c < width; c++) {
@@ -110,8 +121,8 @@ public class Arena {
         {
             if(hero.getPosition().equals(monster.getPosition()))
             {
-                System.out.println();
-                System.exit(0);
+                score.setHealth(score.getHealth()-1);
+
             }
         }
     }
@@ -149,7 +160,11 @@ public class Arena {
             }
             i++;
         }
-        if(flag==1)coins.remove(coins.get(i));
+        if(flag==1)
+        {
+            coins.remove(coins.get(i));
+            score.setPoints(score.getPoints()+1);
+        }
     }
 
 
@@ -164,6 +179,7 @@ public class Arena {
                 verifyMonsterCollisions();
                 moveMonster();
                 verifyMonsterCollisions();
+                checkHealth();
                 break;
             case ArrowDown:
                 position1 = new Position(this.hero.getPosition().getX(),this.hero.getPosition().getY()+1);
@@ -171,6 +187,7 @@ public class Arena {
                 verifyMonsterCollisions();
                 moveMonster();
                 verifyMonsterCollisions();
+                checkHealth();
                 break;
             case ArrowRight:
                 position1 = new Position(this.hero.getPosition().getX()+1,this.hero.getPosition().getY());
@@ -178,6 +195,7 @@ public class Arena {
                 verifyMonsterCollisions();
                 moveMonster();
                 verifyMonsterCollisions();
+                checkHealth();
                 break;
             case ArrowUp:
                 position1 = new Position(this.hero.getPosition().getX(),this.hero.getPosition().getY()-1);
@@ -185,6 +203,7 @@ public class Arena {
                 verifyMonsterCollisions();
                 moveMonster();
                 verifyMonsterCollisions();
+                checkHealth();
                 break;
             case Character:
                 if(key.getCharacter()=='q')System.exit(0);
@@ -196,6 +215,14 @@ public class Arena {
         System.out.println(key);
     }
 
+    private void checkHealth() {
+        if(score.getHealth()==0)
+        {
+
+            System.out.println();
+            System.exit(0);
+        }
+    }
 
 
     public Hero getHero() {
@@ -234,11 +261,18 @@ public class Arena {
         width=100;
         height=20;
         hero = new Hero();
+        this.score= new Score();
         this.walls = createWalls();
         this.coins = createCoins();
         this.monsters=createMonsters();
     }
 
+
+
+    public void endOfGame()
+    {
+        
+    }
     public void draw(TextGraphics graphics) {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#330099")); graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(getWidth(), getWidth()), ' ');
         for (Walls wall : walls)
@@ -252,6 +286,6 @@ public class Arena {
             monster.draw(graphics);
         }
         hero.draw(graphics);
-
+        score.draw(graphics);
     }
 }
