@@ -12,13 +12,12 @@ import java.io.IOException;
 public class Game
 {
     private Screen screen;
-    private Arena arena;
-
+    private final Arena arena = new Arena();
     public Screen getScreen() {
         return screen;
     }
 
-    public void setScreen(Screen screen) {
+    public void setScreen() {
         this.screen = screen;
     }
 
@@ -48,7 +47,6 @@ public class Game
     Game()
     {
         try {
-            this.arena = new Arena();
             TerminalSize terminalSize = new TerminalSize(arena.getWidth(), arena.getHeight());
             DefaultTerminalFactory terminalFactory = new
                     DefaultTerminalFactory()

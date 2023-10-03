@@ -3,6 +3,7 @@ import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.screen.Screen;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Arena {
     private Hero hero;
     private List<Walls> walls;
     private List<Coin> coins;
+    private List<Monster> monsters;
     private List<Walls> createWalls() {
         List<Walls> walls = new ArrayList<>();
         for (int c = 0; c < width; c++) {
@@ -46,6 +48,27 @@ public class Arena {
             coins.add(new Coin(x,y));
         }
         return coins;
+    }
+
+    private List<Monster> createMonsters()
+    {
+        Random random = new Random();
+        ArrayList<Monster> monsters = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+        {
+            int x = 5,y=5;
+
+            x = random.nextInt(width - 2) + 1;
+            y = random.nextInt(height - 2) + 1;
+            Coin c = new Coin(x,y);
+            while(((x==hero.getPosition().getX()) && (y==hero.getPosition().getY())) || (monsters.contains(c)))
+            {
+                x = random.nextInt(width - 2) + 1;
+                y = random.nextInt(height - 2) + 1;
+            }
+            monsters.add(new Monster(x,y));
+        }
+        return monsters;
     }
     public boolean canHeroMove(Position position) {
         int flag = 0;
@@ -81,6 +104,37 @@ public class Arena {
         }
         retrievecoins();
     }
+    public void verifyMonsterCollisions()
+    {
+        for(Monster monster :monsters)
+        {
+            if(hero.getPosition().equals(monster.getPosition()))
+            {
+                System.out.println();
+                System.exit(0);
+            }
+        }
+    }
+    private void moveMonster() {
+        for(Monster monster: monsters)
+        {
+            Position p = monster.move();
+            while(true)
+            {
+
+                if((p.getX()<width-1) && (p.getX()>0) && (p.getY()<height-1) && (p.getY()>0))
+                {
+                    break;
+                }
+                else
+                {
+                    p=monster.move();
+
+                }
+            }
+            monster.setPosition(p);
+        }
+    }
     public void retrievecoins()
     {
         int flag = 0;
@@ -107,28 +161,42 @@ public class Arena {
             case ArrowLeft:
                 position1 = new Position(this.hero.getPosition().getX()-1,this.hero.getPosition().getY());
                 moveHero(position1);
+                verifyMonsterCollisions();
+                moveMonster();
+                verifyMonsterCollisions();
                 break;
             case ArrowDown:
                 position1 = new Position(this.hero.getPosition().getX(),this.hero.getPosition().getY()+1);
                 moveHero(position1);
+                verifyMonsterCollisions();
+                moveMonster();
+                verifyMonsterCollisions();
                 break;
             case ArrowRight:
                 position1 = new Position(this.hero.getPosition().getX()+1,this.hero.getPosition().getY());
                 moveHero(position1);
+                verifyMonsterCollisions();
+                moveMonster();
+                verifyMonsterCollisions();
                 break;
             case ArrowUp:
                 position1 = new Position(this.hero.getPosition().getX(),this.hero.getPosition().getY()-1);
                 moveHero(position1);
+                verifyMonsterCollisions();
+                moveMonster();
+                verifyMonsterCollisions();
                 break;
-            /*case Character:
-                if(key.getCharacter()=='q')Game.getScreen().close();
+            case Character:
+                if(key.getCharacter()=='q')System.exit(0);
                 break;
-            */
+
 
         }
 
         System.out.println(key);
     }
+
+
 
     public Hero getHero() {
         return this.hero;
@@ -168,6 +236,7 @@ public class Arena {
         hero = new Hero();
         this.walls = createWalls();
         this.coins = createCoins();
+        this.monsters=createMonsters();
     }
 
     public void draw(TextGraphics graphics) {
@@ -178,7 +247,11 @@ public class Arena {
         {
             coin.draw(graphics);
         }
-
+        for(Monster monster: monsters)
+        {
+            monster.draw(graphics);
+        }
         hero.draw(graphics);
+
     }
 }
