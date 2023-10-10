@@ -14,6 +14,13 @@ public class Arena {
     private Score score;
     private int width;
 
+
+
+    private int height;
+    private Hero hero;
+    private List<Walls> walls;
+    private List<Coin> coins;
+    private List<Monster> monsters;
     public Score getScore() {
         return score;
     }
@@ -21,12 +28,6 @@ public class Arena {
     public void setScore(Score score) {
         this.score = score;
     }
-
-    private int height;
-    private Hero hero;
-    private List<Walls> walls;
-    private List<Coin> coins;
-    private List<Monster> monsters;
 
     private List<Walls> createWalls() {
         List<Walls> walls = new ArrayList<>();
@@ -121,6 +122,7 @@ public class Arena {
         {
             if(hero.getPosition().equals(monster.getPosition()))
             {
+
                 score.setHealth(score.getHealth()-1);
 
             }
@@ -165,6 +167,7 @@ public class Arena {
             coins.remove(coins.get(i));
             score.setPoints(score.getPoints()+1);
         }
+        if(score.getPoints()==5)System.exit(0);
     }
 
 
@@ -269,10 +272,7 @@ public class Arena {
 
 
 
-    public void endOfGame()
-    {
-        
-    }
+
     public void draw(TextGraphics graphics) {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#330099")); graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(getWidth(), getWidth()), ' ');
         for (Walls wall : walls)

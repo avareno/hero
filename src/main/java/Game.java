@@ -12,6 +12,7 @@ import java.io.IOException;
 public class Game
 {
     private Screen screen;
+    private EofGame eof;
     private final Arena arena = new Arena();
     public Screen getScreen() {
         return screen;
@@ -40,8 +41,7 @@ public class Game
         }
         if(arena.getScore().getHealth()!=0)
         {
-            Arena arena2 = new Arena();
-            arena2.endOfGame();
+
         }
     }
 
